@@ -48,16 +48,16 @@ export class ModalComponent implements OnDestroy {
     constructor(private element: ElementRef) {
         this.instance = new ModalInstance(this.element);
 
-        this.instance.hidden.subscribe((result) => {
-            this.visible = this.instance.visible;
-            if (result === ModalResult.Dismiss) {
-                this.onDismiss.emit(undefined);
-            }
-        });
-
-        this.instance.shown.subscribe(() => {
-            this.onOpen.emit(undefined);
-        });
+        // this.instance.hidden.subscribe((result) => {
+        //     this.visible = this.instance.visible;
+        //     if (result === ModalResult.Dismiss) {
+        //         this.onDismiss.emit(undefined);
+        //     }
+        // });
+        //
+        // this.instance.shown.subscribe(() => {
+        //     this.onOpen.emit(undefined);
+        // });
     }
 
     ngOnDestroy() {

@@ -3,7 +3,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/fromEvent';
 
-declare var jQuery: any;
+// declare var jQuery: any;
+declare var Modal: any;
 
 export class ModalInstance {
 
@@ -47,22 +48,24 @@ export class ModalInstance {
     private show() {
         let promise = toPromise(this.shown);
         this.resetData();
-        this.$modal.modal();
+        this.$modal.show();
         return promise;
     }
 
     private hide(): Promise<ModalResult> {
         if (this.$modal && this.visible) {
             let promise = toPromise(this.hidden);
-            this.$modal.modal('hide');
+            this.$modal.hide();
             return promise;
         }
         return Promise.resolve(this.result);
     }
 
     private init() {
-        this.$modal = jQuery(this.element.nativeElement);
-        this.$modal.appendTo('body');
+        console.log('init');
+        this.$modal = new Modal(this.element.nativeElement);
+        console.log('$modal', this.$modal);
+        // this.$modal.appendTo('body');
 
         this.shown = Observable.fromEvent(this.$modal, this.shownEventName)
             .map(() => {
@@ -82,9 +85,9 @@ export class ModalInstance {
     }
 
     private resetData() {
-        this.$modal.removeData();
-        this.$modal.data('backdrop', booleanOrValue(this.$modal.attr('data-backdrop')));
-        this.$modal.data('keyboard', booleanOrValue(this.$modal.attr('data-keyboard')));
+        // this.$modal.removeData();
+        // this.$modal.data('backdrop', booleanOrValue(this.$modal.attr('data-backdrop')));
+        // this.$modal.data('keyboard', booleanOrValue(this.$modal.attr('data-keyboard')));
     }
 }
 
