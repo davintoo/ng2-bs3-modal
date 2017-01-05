@@ -1,5 +1,5 @@
-import { Component, OnDestroy, Input, Output, EventEmitter, Type, ElementRef, HostBinding, Inject } from '@angular/core';
-import { ModalInstance, ModalResult } from './modal-instance';
+import {Component, OnDestroy, Input, Output, EventEmitter, Type, ElementRef, HostBinding, Inject} from '@angular/core';
+import {ModalInstance, ModalResult} from './modal-instance';
 
 @Component({
     selector: 'modal',
@@ -47,17 +47,6 @@ export class ModalComponent implements OnDestroy {
 
     constructor(private element: ElementRef) {
         this.instance = new ModalInstance(this.element);
-
-        // this.instance.hidden.subscribe((result) => {
-        //     this.visible = this.instance.visible;
-        //     if (result === ModalResult.Dismiss) {
-        //         this.onDismiss.emit(undefined);
-        //     }
-        // });
-        //
-        // this.instance.shown.subscribe(() => {
-        //     this.onOpen.emit(undefined);
-        // });
     }
 
     ngOnDestroy() {
@@ -68,21 +57,23 @@ export class ModalComponent implements OnDestroy {
         return this.ngOnDestroy();
     }
 
-    open(size?: string): Promise<void> {
+    open(size?: string) {
+        // console.log('open');
         if (ModalSize.validSize(size)) this.overrideSize = size;
-        return this.instance.open().then(() => {
-            this.visible = this.instance.visible;
-        });
+        this.visible = true;
+        this.instance.open();
     }
 
-    close(value?: any): Promise<void> {
-        return this.instance.close().then(() => {
-            this.onClose.emit(value);
-        });
+    close(value?: any) {
+        // console.log('close');
+        this.onClose.emit(value);
+        this.instance.close();
     }
 
-    dismiss(): Promise<void> {
-        return this.instance.dismiss();
+    dismiss() {
+        // console.log('dismiss');
+        this.onClose.emit();
+        this.instance.dismiss();
     }
 
     getCssClasses(): string {

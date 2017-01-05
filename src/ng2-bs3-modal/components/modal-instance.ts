@@ -1,5 +1,5 @@
-import { ElementRef } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
+import {ElementRef} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/fromEvent';
 
@@ -7,14 +7,8 @@ import 'rxjs/add/observable/fromEvent';
 declare var Modal: any;
 
 export class ModalInstance {
-
-    private suffix: string = '.ng2-bs3-modal';
-    private shownEventName: string = 'shown.bs.modal' + this.suffix;
-    private hiddenEventName: string = 'hidden.bs.modal' + this.suffix;
     private $modal: any;
 
-    shown: Observable<void>;
-    hidden: Observable<ModalResult>;
     result: any;
     visible: boolean = false;
 
@@ -22,89 +16,44 @@ export class ModalInstance {
         this.init();
     }
 
-    open(): Promise<any> {
+    open() {
         return this.show();
     }
 
-    close(): Promise<any> {
+    close() {
         this.result = ModalResult.Close;
         return this.hide();
     }
 
-    dismiss(): Promise<any> {
+    dismiss() {
         this.result = ModalResult.Dismiss;
         return this.hide();
     }
 
-    destroy(): Promise<any> {
-        return this.hide().then(() => {
-            if (this.$modal) {
-                this.$modal.data('bs.modal', null);
-                this.$modal.remove();
-            }
-        });
+    destroy() {
+        this.hide();
+        if (this.$modal) {
+            this.$modal.remove();
+        }
     }
 
     private show() {
-        let promise = toPromise(this.shown);
-        this.resetData();
-        this.$modal.show();
-        return promise;
+        this.$modal.open();
     }
 
-    private hide(): Promise<ModalResult> {
+    private hide() {
         if (this.$modal && this.visible) {
-            let promise = toPromise(this.hidden);
-            this.$modal.hide();
-            return promise;
+            this.$modal.close();
         }
-        return Promise.resolve(this.result);
+        return this.result;
     }
 
     private init() {
-        console.log('init');
+        // console.log('init3');
         this.$modal = new Modal(this.element.nativeElement);
-        console.log('$modal', this.$modal);
+        // console.log('$modal', this.$modal);
         // this.$modal.appendTo('body');
-
-        this.shown = Observable.fromEvent(this.$modal, this.shownEventName)
-            .map(() => {
-                this.visible = true;
-            });
-
-        this.hidden = Observable.fromEvent(this.$modal, this.hiddenEventName)
-            .map(() => {
-                let result = (!this.result || this.result === ModalResult.None)
-                    ? ModalResult.Dismiss : this.result;
-
-                this.result = ModalResult.None;
-                this.visible = false;
-
-                return result;
-            });
     }
-
-    private resetData() {
-        // this.$modal.removeData();
-        // this.$modal.data('backdrop', booleanOrValue(this.$modal.attr('data-backdrop')));
-        // this.$modal.data('keyboard', booleanOrValue(this.$modal.attr('data-keyboard')));
-    }
-}
-
-function booleanOrValue(value) {
-    if (value === 'true')
-        return true;
-    else if (value === 'false')
-        return false;
-    return value;
-}
-
-function toPromise<T>(observable: Observable<T>): Promise<T> {
-    return new Promise((resolve, reject) => {
-        observable.subscribe(next => {
-            resolve(next);
-        });
-    });
 }
 
 export enum ModalResult {
